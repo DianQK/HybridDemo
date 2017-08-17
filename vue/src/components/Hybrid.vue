@@ -34,7 +34,7 @@ input {
   height: 30px;
   line-height: 30px;
   box-sizing: border-box;
-  padding: 0 15px 0 15px;
+  padding: 0 15px;
   border: 1px solid #e3e3e3;
   color: #2c3e50;
   outline: none;
