@@ -20,11 +20,6 @@ export default {
     return {
       title: 'Hybrid Page'
     }
-  },
-  methods: {
-    changeTitle () {
-      this.title = 'sss'
-    }
   }
 }
 </script>

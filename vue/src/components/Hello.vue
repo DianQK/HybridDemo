@@ -4,7 +4,7 @@
     <NativeRightBar :title="rightBarTitle" @click="rightBarClick" />
     <ul>
       <router-link to="hybrid">Hybrid</router-link>
-      <li><a @click="selectImage">选择图片</a></li>
+      <li><ImageInput @imageSelected="imageSelected" /></li>
       <li><a @click="changeRightBarTitle('Forum')">Forum</a></li>
       <li><a @click="changeRightBarTitle('Chat')">Chat</a></li>
       <li><a @click="changeRightBarTitle('')">Remove</a></li>
@@ -18,6 +18,7 @@
 import NativeTitle from './NativeTitle'
 import NativeRightBar from './NativeRightBar'
 import ImageX from './ImageX'
+import ImageInput from './ImageInput'
 import logo from '../assets/logo.png'
 
 export default {
@@ -25,7 +26,8 @@ export default {
   components: {
     NativeTitle,
     NativeRightBar,
-    ImageX
+    ImageX,
+    ImageInput
   },
   data () {
     return {
@@ -35,9 +37,8 @@ export default {
     }
   },
   methods: {
-    async selectImage () {
-      let response = await this.$native.event('selectImage')
-      this.selectedImage = response.image
+    imageSelected (image) {
+      this.selectedImage = image
     },
     changeRightBarTitle (title) {
       this.rightBarTitle = title
