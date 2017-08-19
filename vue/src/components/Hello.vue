@@ -9,7 +9,7 @@
       <li><a @click="changeRightBarTitle('Chat')">Chat</a></li>
       <li><a @click="changeRightBarTitle('')">Remove</a></li>
       {{count}}
-      <ImageX :src="selectedImage" style="width: 200px; margin-top: 20px;" fullScreen/>
+      <ImageX :src="selectedImage" fullScreen/>
     </ul>
   </div>
 </template>
