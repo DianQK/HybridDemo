@@ -35,6 +35,29 @@ if (window.$native.embedded) {
   }
 }
 
+native.$loadingCount = 0
+Object.defineProperty(native, '$loading', {
+  set: (value) => {
+    if (value) {
+      native.$loadingCount = native.$loadingCount + 1
+    } else {
+      if (native.$loadingCount <= 0) {
+        return
+      }
+      native.$loadingCount = native.$loadingCount - 1
+    }
+    if (native.$loadingCount === 0) {
+      native.event('loading', false)
+    }
+    if (native.$loadingCount === 1) {
+      native.event('loading', true)
+    }
+  },
+  get: () => {
+    return native.$loadingCount > 0
+  }
+ })
+
 if (window.$native.embedded) {
   var callbacks = {}
   native.callbacks = callbacks

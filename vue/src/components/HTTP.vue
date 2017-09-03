@@ -23,14 +23,17 @@ export default {
   },
   methods: {
     send () {
-      let count = [1, 2, 3, 4, 5, 6, 7]
+      this.result = []
+      let count = [1, 2, 3, 4, 5, 6, 7, 8, 9]
       count.forEach(value => {
         this.sendCount(value)
       })
     },
     async sendCount (count) {
+      this.$native.$loading = true
       let res = await this.$native.event('http', { query : { count : count } })
       this.result.push(res.args)
+      this.$native.$loading = false
     }
   }
 }
