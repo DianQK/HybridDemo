@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Hybrid from '@/components/Hybrid'
+import HTTP from '@/components/HTTP'
 
 Vue.use(Router)
 
@@ -18,6 +19,12 @@ const router = new Router({
       name: 'Hybrid',
       component: Hybrid,
       meta: { title: 'Hybrid Page'}
+    },
+    {
+      path: '/http',
+      name: 'Http',
+      component: HTTP,
+      meta: { title: 'HTTP'}
     }
   ]
 })

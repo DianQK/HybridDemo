@@ -3,11 +3,11 @@
     <NativeTitle title="Hello" />
     <NativeRightBar :title="rightBarTitle" @click="rightBarClick" />
     <ul>
-      <router-link to="hybrid">Hybrid</router-link>
+      <li><router-link to="hybrid">Hybrid</router-link></li>
+      <li><router-link to="http">Http</router-link></li>
       <li><ImageInput @imageSelected="imageSelected" /></li>
       <li><a @click="changeRightBarTitle('Forum')">Forum</a></li>
       <li><a @click="changeRightBarTitle('Chat')">Chat</a></li>
-      <li><a @click="changeRightBarTitle('')">Remove</a></li>
       {{count}}
       <ImageX :src="selectedImage" fullScreen/>
     </ul>

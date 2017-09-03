@@ -218,3 +218,17 @@ struct DisplayImagePlugin: CallBackHybridPlugin {
     }
     
 }
+
+struct HTTPRequestPlugin: CallBackHybridPlugin {
+    
+    static var name: String {
+        return "http"
+    }
+    
+    static func didReceive(message: JSON, webView: WKWebView, viewController: UIViewController) -> Observable<JSON> {
+        let query: JSON = message["query"]
+        return URLSession.shared.rx.json(url: URL(string: "https://httpbin.org/get?\(query.map { "\($0)=\($1.stringValue)" }.joined(separator: "&"))")!)
+            .map { JSON($0) }
+    }
+    
+}

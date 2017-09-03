@@ -100,6 +100,7 @@ class HybridViewController: UIViewController {
             make.leading.bottom.trailing.equalTo(self.view)
         }
 
+        webView.allowsBackForwardNavigationGestures = true
 //        webView.load(URLRequest(url: URL(string: vueWebServer.serverURL!.absoluteString + "#/")!))
         
 //        let back = UIBarButtonItem()
