@@ -33,7 +33,7 @@ public protocol HybridPlugin {
     
     static var name: String { get }
     
-    static func didReceive(message: Observable<(message: JSON, webView: WKWebView, viewController: UIViewController)>) -> Disposable
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable
     
 }
 
@@ -56,29 +56,28 @@ public class ScriptMessageService {
     
 }
 
-class HybridViewController: UIViewController {
+class Hybrid {
+    
+    static let shared = Hybrid()
     
     var webView: WKWebView!
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = UIColor.white
+    init() {
         
         let configuration = WKWebViewConfiguration()
-        
+
         let userContentController = WKUserContentController()
         for plugin in ScriptMessageService.plugins {
             let scriptMessageHandler = ScriptMessageHandler()
             let receive = scriptMessageHandler.subject
-                .flatMap { [weak self] (message) -> Observable<(message: JSON, webView: WKWebView, viewController: UIViewController)> in
+                .flatMap { [weak self] (message) -> Observable<(message: JSON, webView: WKWebView)> in
                     guard let `self` = self else {
                         return Observable.empty()
                     }
-                    return Observable.just((message: JSON(message), webView: self.webView, viewController: self))
-                }
+                    return Observable.just((message: JSON(message), webView: self.webView))
+            }
             plugin.didReceive(message: receive)
                 .disposed(by: scriptMessageHandler.disposeBag)
             userContentController.add(scriptMessageHandler, name: plugin.name)
@@ -91,47 +90,94 @@ class HybridViewController: UIViewController {
         configuration.preferences = preferences
         
         let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
-        
-        self.view.addSubview(webView)
         self.webView = webView
+        
+    }
+    
+}
 
+//- (UIImage*)imageSnapshot {
+//    UIGraphicsBeginImageContextWithOptions(self.bounds.size,YES,self.contentScaleFactor);
+//    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:YES];
+//    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return newImage;
+//}
+
+extension UIView {
+    
+    var imageSnapshot: UIImage {
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, true, UIScreen.main.scale)
+        self.drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+    
+}
+
+class HybridViewController: UIViewController {
+    
+    var webView: WKWebView!
+    
+    let snapshotImageView = UIImageView()
+    
+    let disposeBag = DisposeBag()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = UIColor.white
+        
+        self.view.addSubview(Hybrid.shared.webView)
+        self.webView = Hybrid.shared.webView
+        
         self.webView.snp.makeConstraints { (make) in
-            make.top.equalTo(self.view).offset(64)
-            make.leading.bottom.trailing.equalTo(self.view)
+            make.edges.equalTo(self.view)
         }
-
-        webView.allowsBackForwardNavigationGestures = true
-//        webView.load(URLRequest(url: URL(string: vueWebServer.serverURL!.absoluteString + "#/")!))
         
-//        let back = UIBarButtonItem()
-//        back.title = "返回"
-//        back.rx.tap
-//            .subscribe(onNext: { [unowned self] in
-//                if self.webView.canGoBack {
-//                    self.webView.evaluateJavaScript("window.history.back();", completionHandler: nil)
-//                } else {
-//                    self.navigationController?.popViewController(animated: true)
-//                }
-//            })
-//            .disposed(by: disposeBag)
-//        self.navigationItem.leftBarButtonItem = back
-        
-//        webView.rx.observe(Bool.self, "canGoBack").map { $0 ?? false }
-//            .bind(to: back.rx.isEnabled)
-//            .disposed(by: disposeBag)
-        
+        self.view.addSubview(snapshotImageView)
+        self.snapshotImageView.snp.makeConstraints { (make) in
+            make.edges.equalTo(self.view)
+        }
 
     }
     
-    override func navigationShouldPopOnBackButton() -> Bool {
-        if self.webView.canGoBack {
-            self.webView.evaluateJavaScript("window.history.back();", completionHandler: nil)
-            return false
-        } else {
-            return true
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.view.addSubview(Hybrid.shared.webView)
+        self.view.insertSubview(Hybrid.shared.webView, belowSubview: self.snapshotImageView)
+        self.webView = Hybrid.shared.webView
+        
+        self.webView.snp.remakeConstraints { (make) in
+            make.edges.equalTo(self.view)
         }
     }
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.snapshotImageView.isHidden = true
+        self.snapshotImageView.image = nil
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.snapshotImageView.isHidden = false
+        if self.snapshotImageView.image == nil {
+            self.snapshotImageView.image = self.webView.imageSnapshot
+        }
+    }
+    
+    override func navigationShouldPopOnBackButton() -> Bool {
+//        if self.webView.canGoBack {
+//            self.webView.evaluateJavaScript("window.history.back();", completionHandler: nil)
+//            return false
+//        } else {
+//            return true
+//        }
+        self.webView.evaluateJavaScript("window.history.back();", completionHandler: nil)
+        return true
+    }
 
 }
 

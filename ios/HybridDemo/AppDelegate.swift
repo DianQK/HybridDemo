@@ -26,7 +26,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             RightBarTitlePlugin.self,
             LogPlugin.self,
             DisplayImagePlugin.self,
-            HTTPRequestPlugin.self
+            HTTPRequestPlugin.self,
+            LoadingPlugin.self,
+            NavigationPlugin.self,
+            NavigationGoPlugin.self
         ]
         
         let vueFilePath = R.file.vueZip()!

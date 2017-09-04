@@ -1,6 +1,7 @@
 <template>
   <div class="http">
     <NativeTitle title="HTTP" />
+    <router-link to="go">Go</router-link>
     <a @click="send">Send</a>
     <div v-for="value in result">
       {{ value }}

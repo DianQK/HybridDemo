@@ -19,11 +19,11 @@ struct TitlePlugin: HybridPlugin {
         return "title"
     }
     
-    static func didReceive(message: Observable<(message: JSON, webView: WKWebView, viewController: UIViewController)>) -> Disposable {
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
         return message
-            .subscribe(onNext: { (message, webView, viewController) in
+            .subscribe(onNext: { (message, webView) in
                 let title = message["title"].string
-                viewController.title = title
+                webView.parentViewController?.title = title
             })
     }
     
@@ -31,19 +31,19 @@ struct TitlePlugin: HybridPlugin {
 
 public protocol CallBackHybridPlugin: HybridPlugin {
     
-    static func didReceive(message: JSON, webView: WKWebView, viewController: UIViewController) -> Observable<JSON>
+    static func didReceive(message: JSON, webView: WKWebView) -> Observable<JSON>
     
 }
 
 
 extension CallBackHybridPlugin {
     
-    public static func didReceive(message: Observable<(message: JSON, webView: WKWebView, viewController: UIViewController)>) -> Disposable {
+    public static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
         return message
-            .flatMap { (message, webView, viewController) -> Observable<(callbackId: String, response: JSON, webView: WKWebView)> in
+            .flatMap { (message, webView) -> Observable<(callbackId: String, response: JSON, webView: WKWebView)> in
                 let callbackId = message["callbackId"].stringValue
                 let content = message["content"]
-                return didReceive(message: content, webView: webView, viewController: viewController)
+                return didReceive(message: content, webView: webView)
                     .map { (response) in
                         return (callbackId: callbackId, response: response, webView: webView)
                 }
@@ -62,7 +62,7 @@ struct SelectImagePlugin: CallBackHybridPlugin {
         return "selectImage"
     }
     
-    static func didReceive(message: JSON, webView: WKWebView, viewController: UIViewController) -> Observable<JSON> {
+    static func didReceive(message: JSON, webView: WKWebView) -> Observable<JSON> {
         return Observable<UIImagePickerControllerSourceType>
             .create { (observer) -> Disposable in
                 let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -75,13 +75,13 @@ struct SelectImagePlugin: CallBackHybridPlugin {
                     observer.onCompleted()
                 }))
                 alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
-                viewController.present(alert, animated: true, completion: nil)
+                webView.parentViewController?.present(alert, animated: true, completion: nil)
                 return Disposables.create {
                     alert.dismiss(animated: true, completion: nil)
                 }
             }
             .flatMap { sourceType in
-                UIImagePickerController.rx.createWithParent(viewController) { picker in
+                UIImagePickerController.rx.createWithParent(webView.parentViewController!) { picker in
                     picker.sourceType = sourceType
                     picker.allowsEditing = true
                 }
@@ -101,16 +101,16 @@ struct RightBarTitlePlugin: HybridPlugin {
         return "rightBarTitle"
     }
     
-    static func didReceive(message: Observable<(message: JSON, webView: WKWebView, viewController: UIViewController)>) -> Disposable {
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
         return message
-            .flatMapLatest { (message, webView, viewController) -> Observable<WKWebView> in
+            .flatMapLatest { (message, webView) -> Observable<WKWebView> in
                 let title = message["title"].stringValue
                 if title.isEmpty {
-                    viewController.navigationItem.rightBarButtonItem = nil
+                    webView.parentViewController?.navigationItem.rightBarButtonItem = nil
                     return Observable.empty()
                 }
                 let rightBarButtonItem = UIBarButtonItem(title: title, style: UIBarButtonItemStyle.plain, target: nil, action: nil)
-                viewController.navigationItem.rightBarButtonItem = rightBarButtonItem
+                webView.parentViewController?.navigationItem.rightBarButtonItem = rightBarButtonItem
                 return rightBarButtonItem.rx.tap
                     .map { webView }
             }
@@ -127,9 +127,9 @@ struct LogPlugin: HybridPlugin {
         return "log"
     }
     
-    static func didReceive(message: Observable<(message: JSON, webView: WKWebView, viewController: UIViewController)>) -> Disposable {
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
         return message
-            .subscribe(onNext: { (message, webView, viewController) in
+            .subscribe(onNext: { (message, webView) in
                 print(message)
             })
     }
@@ -142,7 +142,7 @@ struct DisplayImagePlugin: CallBackHybridPlugin {
         return "displayImage"
     }
 
-    static func didReceive(message: JSON, webView: WKWebView, viewController: UIViewController) -> Observable<JSON> {
+    static func didReceive(message: JSON, webView: WKWebView) -> Observable<JSON> {
         guard let image = URL(string: message["image"].stringValue).flatMap({ try? Data(contentsOf: $0) }).flatMap({ UIImage(data: $0) }) else {
             return Observable.just(JSON([:]))
         }
@@ -225,10 +225,70 @@ struct HTTPRequestPlugin: CallBackHybridPlugin {
         return "http"
     }
     
-    static func didReceive(message: JSON, webView: WKWebView, viewController: UIViewController) -> Observable<JSON> {
+    static func didReceive(message: JSON, webView: WKWebView) -> Observable<JSON> {
         let query: JSON = message["query"]
         return URLSession.shared.rx.json(url: URL(string: "https://httpbin.org/get?\(query.map { "\($0)=\($1.stringValue)" }.joined(separator: "&"))")!)
             .map { JSON($0) }
+    }
+    
+}
+
+import NVActivityIndicatorView
+
+struct LoadingPlugin: HybridPlugin {
+    
+    static var name: String {
+        return "loading"
+    }
+    
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
+        return message
+            .subscribe(onNext: { (message, webView) in
+                let activityData = ActivityData()
+                let loading = message["content"].boolValue
+                if loading {
+                    NVActivityIndicatorPresenter.sharedInstance.startAnimating(activityData)
+                } else {
+                    NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                }
+            })
+    }
+    
+}
+
+struct NavigationPlugin: HybridPlugin {
+    
+    static var name: String {
+        return "navigation"
+    }
+    
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
+        return message
+            .subscribe(onNext: { (message, webView) in
+                let nextHybrid = R.storyboard.main.hybridViewController()!
+//                webView.parentViewController?.show(nextHybrid, sender: nil)
+                webView.parentViewController?.navigationController?.pushViewController(nextHybrid, animated: true)
+            })
+    }
+    
+}
+
+struct NavigationGoPlugin: HybridPlugin {
+    
+    static var name: String { // 当前只支持负数 go(-2)
+        return "go"
+    }
+
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
+        return message
+            .subscribe(onNext: { (message, webView) in
+                guard let navigationController = webView.parentViewController?.navigationController else { return }
+                let n = abs(message["content"].intValue)
+                if n < navigationController.viewControllers.count {
+                    let to = navigationController.viewControllers[navigationController.viewControllers.count - n - 1]
+                    navigationController.popToViewController(to, animated: true)
+                }
+            })
     }
     
 }

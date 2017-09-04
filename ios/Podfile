@@ -13,5 +13,6 @@ target 'HybridDemo' do
   pod 'Zip'
   pod 'R.swift'
   pod 'GCDWebServer'
+  pod 'NVActivityIndicatorView'
 
 end
