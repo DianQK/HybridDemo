@@ -24,8 +24,8 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let vueWebServerUrl = (vueWebServer.serverURL?.absoluteString ?? "http://localhost:\(vueWebServer.port)/") + "#/"
-        let reactWebServerUrl = (reactWebServer.serverURL?.absoluteString ?? "http://localhost:\(reactWebServer.port)/")
+        let vueWebServerUrl = "http://localhost:\(vueWebServer.port)/#/"
+        let reactWebServerUrl = "http://localhost:\(reactWebServer.port)/"
 
         Observable.merge([
             vueLocalFileButton.rx.tap.asObservable().map { URL(string: vueWebServerUrl)! },

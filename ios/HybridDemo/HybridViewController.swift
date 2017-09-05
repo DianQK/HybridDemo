@@ -96,7 +96,11 @@ class Hybrid {
 //        webView.scrollView.refreshControl = rc
         
         self.webView = webView
-        
+
+    }
+    
+    func preLoad(url: URL) {
+        self.webView.load(URLRequest(url: url))
     }
     
 }

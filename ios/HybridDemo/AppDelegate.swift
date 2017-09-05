@@ -64,6 +64,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         reactWebServer.addGETHandler(forBasePath: "/", directoryPath: documentsDirectory.appendingPathComponent("react").absoluteString.replacingOccurrences(of: "file://", with: ""), indexFilename: "index.html", cacheAge: 300, allowRangeRequests: true)
         reactWebServer.start(withPort: 7081, bonjourName: nil)
+        let vueWebServerUrl = "http://localhost:\(vueWebServer.port)/#/"
+        Hybrid.shared.preLoad(url: URL(string: vueWebServerUrl)!)
 
         return true
     }
