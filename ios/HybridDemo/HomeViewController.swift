@@ -23,23 +23,23 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let vueWebServerUrl = (vueWebServer.serverURL?.absoluteString ?? "http://localhost:\(vueWebServer.port)/") + "#/"
+        let reactWebServerUrl = (reactWebServer.serverURL?.absoluteString ?? "http://localhost:\(reactWebServer.port)/")
 
         Observable.merge([
-            vueLocalFileButton.rx.tap.asObservable().map { URL(string: vueWebServer.serverURL!.absoluteString + "#/")! },
-            vueLocalhostButton.rx.tap.asObservable().map { URL(string: "http://localhost:8080")! },
-            reactLocalFileButton.rx.tap.asObservable().map { URL(string: reactWebServer.serverURL!.absoluteString)! },
-            reactLocalhostButton.rx.tap.asObservable().map { URL(string: "http://localhost:3000")! },
+            vueLocalFileButton.rx.tap.asObservable().map { URL(string: vueWebServerUrl)! },
+            vueLocalhostButton.rx.tap.asObservable().map { URL(string: "http://localhost:8080/#/")! },
+            reactLocalFileButton.rx.tap.asObservable().map { URL(string: reactWebServerUrl)! },
+            reactLocalhostButton.rx.tap.asObservable().map { URL(string: "http://localhost:3000/")! },
             ])
-            .subscribe(onNext: { url in
-                self.performSegue(withIdentifier: R.segue.homeViewController.showHybrid, sender: url)
+            .subscribe(onNext: { [unowned self] url in
+                let hybridViewController = R.storyboard.main.hybridViewController()!
+                _ = hybridViewController.view
+                hybridViewController.webView.load(URLRequest(url: url))
+                self.navigationController?.pushViewController(hybridViewController, animated: true)
             })
             .disposed(by: disposeBag)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let segue = R.segue.homeViewController.showHybrid(segue: segue) {
-            _ = segue.destination.view
-            segue.destination.webView.load(URLRequest(url: sender as! URL))
-        }
-    }
 }

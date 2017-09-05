@@ -63,23 +63,8 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.segue` struct is generated, and contains static references to 1 view controllers.
+  /// This `R.segue` struct is generated, and contains static references to 0 view controllers.
   struct segue {
-    /// This struct is generated for `HomeViewController`, and contains static references to 1 segues.
-    struct homeViewController {
-      /// Segue identifier `showHybrid`.
-      static let showHybrid: Rswift.StoryboardSegueIdentifier<UIKit.UIStoryboardSegue, HomeViewController, HybridViewController> = Rswift.StoryboardSegueIdentifier(identifier: "showHybrid")
-      
-      /// Optionally returns a typed version of segue `showHybrid`.
-      /// Returns nil if either the segue identifier, the source, destination, or segue types don't match.
-      /// For use inside `prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)`.
-      static func showHybrid(segue: UIKit.UIStoryboardSegue) -> Rswift.TypedStoryboardSegueInfo<UIKit.UIStoryboardSegue, HomeViewController, HybridViewController>? {
-        return Rswift.TypedStoryboardSegueInfo(segueIdentifier: R.segue.homeViewController.showHybrid, segue: segue)
-      }
-      
-      fileprivate init() {}
-    }
-    
     fileprivate init() {}
   }
   

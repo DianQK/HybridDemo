@@ -1,7 +1,8 @@
 <template>
   <div class="http">
     <NativeTitle title="Go" />
-    <a @click="go">Go</a>
+    <a @click="go">Go(-2)</a>
+    <a @click="back">Back</a>
   </div>
 </template>
 
@@ -21,6 +22,9 @@ export default {
   methods: {
     go () {
       this.$router.go(-2)
+    },
+    back () {
+      this.$router.back()
     }
   }
 }

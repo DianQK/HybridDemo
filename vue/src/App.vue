@@ -38,4 +38,12 @@ li {
 a {
   color: #42b983;
 }
+
+input,
+textarea,
+button,
+select,
+a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
 </style>

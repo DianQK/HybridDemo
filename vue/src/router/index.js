@@ -41,8 +41,14 @@ router.go = (n) => {
   router.history.go(n)
 }
 
+router.back = () => {
+  router.go(-1)
+}
+
 router.push = (location, onComplete, onAbort) => {
-  window.$native.event('navigation')
+  let route = router.matcher.match(location)
+  let title = route.meta && (route.meta.title || '')
+  window.$native.event('navigation', { title })
   router.history.push(location, onComplete, onAbort)
 }
 

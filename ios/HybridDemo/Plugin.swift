@@ -23,7 +23,9 @@ struct TitlePlugin: HybridPlugin {
         return message
             .subscribe(onNext: { (message, webView) in
                 let title = message["title"].string
-                webView.parentViewController?.title = title
+                if webView.parentViewController?.title != title {
+                    webView.parentViewController?.title = title
+                }
             })
     }
     
@@ -109,10 +111,19 @@ struct RightBarTitlePlugin: HybridPlugin {
                     webView.parentViewController?.navigationItem.rightBarButtonItem = nil
                     return Observable.empty()
                 }
-                let rightBarButtonItem = UIBarButtonItem(title: title, style: UIBarButtonItemStyle.plain, target: nil, action: nil)
-                webView.parentViewController?.navigationItem.rightBarButtonItem = rightBarButtonItem
-                return rightBarButtonItem.rx.tap
-                    .map { webView }
+                let bar: UIBarButtonItem
+                if let rightBarButtonItem = webView.parentViewController?.navigationItem.rightBarButtonItem {
+                    bar = rightBarButtonItem
+                    if bar.title != title {
+                        webView.parentViewController?.navigationItem.rightBarButtonItem = nil
+                        bar.title = title
+                        webView.parentViewController?.navigationItem.rightBarButtonItem = bar
+                    }
+                } else {
+                    bar = UIBarButtonItem(title: title, style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+                    webView.parentViewController?.navigationItem.rightBarButtonItem = bar
+                }
+                return bar.rx.tap.map { webView }
             }
             .subscribe(onNext: { (webView) in
                 webView.evaluateJavaScript("window.$native.rightBarClick();", completionHandler: nil)
@@ -146,13 +157,13 @@ struct DisplayImagePlugin: CallBackHybridPlugin {
         guard let image = URL(string: message["image"].stringValue).flatMap({ try? Data(contentsOf: $0) }).flatMap({ UIImage(data: $0) }) else {
             return Observable.just(JSON([:]))
         }
+        let keyWindow = UIApplication.shared.keyWindow!
         let frame = CGRect(
             x: message["x"].doubleValue,
-            y: message["y"].doubleValue + Double(webView.frame.origin.y) - Double(webView.scrollView.contentOffset.y),
+            y: message["y"].doubleValue + Double(-webView.convert(webView.bounds.origin, from: keyWindow).y) - Double(webView.scrollView.contentOffset.y),
             width: message["width"].doubleValue,
             height: message["height"].doubleValue
         )
-        let keyWindow = UIApplication.shared.keyWindow!
         let displayView = DisplayView(frame: keyWindow.bounds)
         displayView.display(image: image, frame: frame)
         return displayView.displayFinished.ifEmpty(default: ()).map { JSON([:]) }
@@ -265,8 +276,12 @@ struct NavigationPlugin: HybridPlugin {
     static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
         return message
             .subscribe(onNext: { (message, webView) in
+                let title = message["content"]["title"].stringValue
                 let nextHybrid = R.storyboard.main.hybridViewController()!
-//                webView.parentViewController?.show(nextHybrid, sender: nil)
+                nextHybrid.title = title
+                let parentViewController = webView.parentViewController
+                parentViewController?.snapshotImageView.image = webView.imageSnapshot
+                parentViewController?.snapshotImageView.isHidden = false
                 webView.parentViewController?.navigationController?.pushViewController(nextHybrid, animated: true)
             })
     }
@@ -286,6 +301,19 @@ struct NavigationGoPlugin: HybridPlugin {
                 let n = abs(message["content"].intValue)
                 if n < navigationController.viewControllers.count {
                     let to = navigationController.viewControllers[navigationController.viewControllers.count - n - 1]
+                    webView.parentViewController?.snapshotImageView.isHidden = false
+                    webView.parentViewController?.snapshotImageView.image = webView.parentViewController?.webView.imageSnapshot
+                    if let to = to as? HybridViewController {
+                        to.view.addSubview(Hybrid.shared.webView)
+                        to.view.insertSubview(Hybrid.shared.webView, belowSubview: to.snapshotImageView)
+                        
+                        to.snapshotImageView.image = nil
+                        to.snapshotImageView.isHidden = true
+                        
+                        to.webView.snp.remakeConstraints({ (make) in
+                            make.edges.equalTo(to.view)
+                        })
+                    }
                     navigationController.popToViewController(to, animated: true)
                 }
             })

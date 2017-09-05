@@ -12,8 +12,8 @@
         <!--Navigation Controller-->
         <scene sceneID="pyJ-b1-HfN">
             <objects>
-                <navigationController id="b7E-3i-oyo" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="BOD-6t-wJb">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="b7E-3i-oyo" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="BOD-6t-wJb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -28,17 +28,17 @@
         <!--Home-->
         <scene sceneID="cm3-7d-VNP">
             <objects>
-                <viewController id="F2C-tB-aiO" customClass="HomeViewController" customModule="HybridDemo" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="F2C-tB-aiO" customClass="HomeViewController" customModule="HybridDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kie-LQ-9iI"/>
                         <viewControllerLayoutGuide type="bottom" id="PsV-LX-5fV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="yll-ld-ZIX">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="BqT-8t-U9l">
-                                <rect key="frame" x="108.5" y="231" width="158" height="205"/>
+                                <rect key="frame" x="108.5" y="199" width="158" height="205"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="26g-OT-XJp">
                                         <rect key="frame" x="0.0" y="0.0" width="158" height="40"/>
@@ -75,7 +75,6 @@
                         <outlet property="reactLocalhostButton" destination="1tz-eM-sI0" id="SIL-zd-Tz8"/>
                         <outlet property="vueLocalFileButton" destination="26g-OT-XJp" id="1v2-Nj-69M"/>
                         <outlet property="vueLocalhostButton" destination="fIi-Ri-med" id="Zdq-Mj-WY5"/>
-                        <segue destination="BYZ-38-t0r" kind="show" identifier="showHybrid" id="Gsi-s0-AXy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SI9-MU-gge" userLabel="First Responder" sceneMemberID="firstResponder"/>
