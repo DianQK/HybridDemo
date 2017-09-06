@@ -244,7 +244,7 @@ struct HTTPRequestPlugin: CallBackHybridPlugin {
     
 }
 
-import NVActivityIndicatorView
+import MBProgressHUD
 
 struct LoadingPlugin: HybridPlugin {
     
@@ -252,16 +252,47 @@ struct LoadingPlugin: HybridPlugin {
         return "loading"
     }
     
+    static let hud: MBProgressHUD = {
+        let hud = MBProgressHUD(view: UIApplication.shared.keyWindow!)
+        hud.removeFromSuperViewOnHide = true
+        return hud
+    }()
+    
     static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
         return message
             .subscribe(onNext: { (message, webView) in
-                let activityData = ActivityData()
                 let loading = message["content"].boolValue
                 if loading {
-                    NVActivityIndicatorPresenter.sharedInstance.startAnimating(activityData)
+                    UIApplication.shared.keyWindow!.addSubview(hud)
+                    hud.show(animated: true)
                 } else {
-                    NVActivityIndicatorPresenter.sharedInstance.stopAnimating()
+                    hud.hide(animated: true)
                 }
+            })
+    }
+    
+}
+
+struct ToastPlugin: HybridPlugin {
+    
+    static var name: String {
+        return "toast"
+    }
+    
+    static let hud: MBProgressHUD = {
+        let hud = MBProgressHUD(view: UIApplication.shared.keyWindow!)
+        hud.mode = MBProgressHUDMode.text
+        return hud
+    }()
+    
+    static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
+        return message
+            .subscribe(onNext: { (message, webView) in
+                let text = message["content"].stringValue
+                hud.label.text = text
+                UIApplication.shared.keyWindow!.addSubview(hud)
+                hud.show(animated: true)
+                hud.hide(animated: true, afterDelay: 1)
             })
     }
     

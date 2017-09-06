@@ -13,6 +13,6 @@ target 'HybridDemo' do
   pod 'Zip'
   pod 'R.swift'
   pod 'GCDWebServer'
-  pod 'NVActivityIndicatorView'
+  pod 'MBProgressHUD', '~> 1.0.0'
 
 end

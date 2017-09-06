@@ -5,6 +5,7 @@
     <div class="">
       <input type="text" v-model="title">
     </div>
+    <a @click="toast">Send</a>
   </div>
 </template>
 
@@ -19,6 +20,11 @@ export default {
   data () {
     return {
       title: 'Hybrid Page'
+    }
+  },
+  methods: {
+    toast () {
+      this.$native.event('toast', this.title)
     }
   }
 }
