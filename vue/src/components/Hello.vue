@@ -19,7 +19,8 @@ import NativeTitle from './NativeTitle'
 import NativeRightBar from './NativeRightBar'
 import ImageX from './ImageX'
 import ImageInput from './ImageInput'
-import logo from '../assets/logo.png'
+import { mapState } from 'vuex'
+import { mapMutations } from 'vuex'
 
 export default {
   name: 'hello',
@@ -31,22 +32,20 @@ export default {
   },
   data () {
     return {
-      selectedImage: logo,
-      count: 0,
       rightBarTitle: 'Chat',
     }
   },
+  computed: mapState([
+    'count', 'selectedImage'
+  ]),
   methods: {
-    imageSelected (image) {
-      this.selectedImage = image
-    },
     changeRightBarTitle (title) {
       this.rightBarTitle = title
     },
-    rightBarClick () {
-      this.count += 1
-      console.log({ count: this.count })
-    }
+    ...mapMutations({
+      rightBarClick: 'increment',
+      imageSelected: 'selectImage'
+    })
   }
 }
 </script>
