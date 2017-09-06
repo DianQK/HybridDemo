@@ -1,8 +1,76 @@
-export var native = {}
+class Native {
 
-window.$native = native
+  get embedded () {
+    return window.webkit != undefined // You can change this, write your embedded
+  }
 
-window.$native.embedded = window.webkit != undefined // You can change this, write your embedded
+  set title (title) {
+    title = title || ''
+    this.perform('title', { title })
+  }
+
+  set rightBarTitle (title) {
+    title = title || ''
+    this.perform('rightBarTitle', { title })
+  }
+
+  _loadingCount = 0
+  set $loading (value) {
+    if (value) {
+      this._loadingCount = this._loadingCount + 1
+    } else {
+      if (this._loadingCount <= 0) {
+        return
+      }
+      this._loadingCount = this._loadingCount - 1
+    }
+    if (this._loadingCount === 0) {
+      this.event('loading', false)
+    }
+    if (this._loadingCount === 1) {
+      this.event('loading', true)
+    }
+  }
+  get $loading () {
+    return this._loadingCount > 0
+  }
+
+  callbacks = {}
+
+  event (name, params) {
+    let uuid = generateUUID()
+    let message = {
+      callbackId: uuid,
+      content: params || {}
+    }
+    let promise = new Promise((resolve, reject) => {
+      this.callbacks[uuid] = {
+        callback: (res) => {
+          resolve(res)
+          delete this.callbacks[uuid]
+        }
+      }
+    })
+    this.perform(name, message)
+    return promise
+  }
+
+  perform (name, message) {
+    if (!this.embedded) {
+      return
+    }
+    if ((window.webkit) && window.webkit.messageHandlers[name]) {
+      window.webkit.messageHandlers[name].postMessage(message)
+    }
+  }
+
+  constructor() {
+    window.$native = this
+  }
+
+}
+
+const native = new Native()
 
 function generateUUID () {
   var d = new Date().getTime()
@@ -14,72 +82,4 @@ function generateUUID () {
   return uuid
 }
 
-if (window.$native.embedded) {
-  Object.defineProperty(native, 'title', { set: (title) => {
-    title = title || ''
-    window.webkit.messageHandlers.title.postMessage({ title })
-  } })
-
-  Object.defineProperty(native, 'rightBarTitle', { set: (title) => {
-    title = title || ''
-    window.webkit.messageHandlers.rightBarTitle.postMessage({ title })
-  } })
-}
-
-if (window.$native.embedded) {
-  let webLog = console.log
-
-  console.log = (...message) => {
-    webLog(message)
-    window.webkit.messageHandlers.log.postMessage(`${JSON.stringify(message)}`)
-  }
-}
-
-native.$loadingCount = 0
-Object.defineProperty(native, '$loading', {
-  set: (value) => {
-    if (value) {
-      native.$loadingCount = native.$loadingCount + 1
-    } else {
-      if (native.$loadingCount <= 0) {
-        return
-      }
-      native.$loadingCount = native.$loadingCount - 1
-    }
-    if (native.$loadingCount === 0) {
-      native.event('loading', false)
-    }
-    if (native.$loadingCount === 1) {
-      native.event('loading', true)
-    }
-  },
-  get: () => {
-    return native.$loadingCount > 0
-  }
- })
-
-if (window.$native.embedded) {
-  var callbacks = {}
-  native.callbacks = callbacks
-
-  native.event = (name, params) => {
-    let uuid = generateUUID()
-    callbacks[uuid] = {}
-    let message = {
-      callbackId: uuid,
-      content: params || {}
-    }
-    let promise = new Promise(function(resolve, reject) {
-      callbacks[uuid].callback = (res) => {
-        resolve(res)
-        delete callbacks[uuid]
-      }
-    })
-    window.webkit.messageHandlers[name].postMessage(message)
-    return promise
-  }
-} else {
-  native.event = (name) => {
-    console.error('unsupport', name)
-  }
-}
+export default native
