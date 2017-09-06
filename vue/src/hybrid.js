@@ -1,3 +1,11 @@
+class NativeError { // extends Error {
+  constructor ({ code, message }) {
+    // super()
+    this.code = code
+    this.message = message
+  }
+}
+
 class Native {
 
   get embedded () {
@@ -46,7 +54,11 @@ class Native {
     let promise = new Promise((resolve, reject) => {
       this.callbacks[uuid] = {
         callback: (res) => {
-          resolve(res)
+          if (res.error) {
+            reject(new NativeError(res.error))
+          } else {
+            resolve(res)
+          }
           delete this.callbacks[uuid]
         }
       }

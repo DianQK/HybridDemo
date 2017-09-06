@@ -32,8 +32,13 @@ export default {
     },
     async sendCount (count) {
       this.$native.$loading = true
-      let res = await this.$native.event('http', { query : { count : count } })
-      this.result.push(res.args)
+      try {
+        let res = await this.$native.event('http', { query : { count : count } })
+        this.result.push(res.args)
+      } catch (e) {
+        console.log(e.code)
+        this.result.push(e)
+      }
       this.$native.$loading = false
     }
   }

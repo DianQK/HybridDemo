@@ -37,7 +37,6 @@ public protocol CallBackHybridPlugin: HybridPlugin {
     
 }
 
-
 extension CallBackHybridPlugin {
     
     public static func didReceive(message: Observable<(message: JSON, webView: WKWebView)>) -> Disposable {
@@ -46,6 +45,9 @@ extension CallBackHybridPlugin {
                 let callbackId = message["callbackId"].stringValue
                 let content = message["content"]
                 return didReceive(message: content, webView: webView)
+                    .catchError { (error) -> Observable<JSON> in
+                        return Observable.just(JSON(["error": ["code": error._code, "message": error.localizedDescription]]))
+                    }
                     .map { (response) in
                         return (callbackId: callbackId, response: response, webView: webView)
                 }
