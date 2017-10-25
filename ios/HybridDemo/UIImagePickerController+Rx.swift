@@ -41,6 +41,15 @@
     
 #endif
 
+open class RxImagePickerDelegateProxy
+: RxNavigationControllerDelegateProxy, UIImagePickerControllerDelegate {
+
+    public init(imagePicker: UIImagePickerController) {
+        super.init(navigationController: imagePicker)
+    }
+
+}
+
 fileprivate func castOrThrow<T>(_ resultType: T.Type, _ object: Any) throws -> T {
     guard let returnValue = object as? T else {
         throw RxCocoaError.castingError(object: object, targetType: resultType)

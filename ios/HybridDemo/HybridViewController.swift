@@ -12,7 +12,6 @@ import RxCocoa
 import WebKit
 import SnapKit
 import SwiftyJSON
-import Zip
 
 extension WKWebView {
 
@@ -90,6 +89,10 @@ class Hybrid {
         configuration.preferences = preferences
         
         let webView = WKWebView(frame: CGRect.zero, configuration: configuration)
+
+        if #available(iOS 11.0, *) {
+            webView.scrollView.contentInsetAdjustmentBehavior = .never
+        }
         
 //        let rc = UIRefreshControl()
 //        rc.tintColor = UIColor.black

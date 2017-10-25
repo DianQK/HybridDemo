@@ -1,39 +1,31 @@
 PODS:
-  - GCDWebServer (3.4):
-    - GCDWebServer/Core (= 3.4)
-  - GCDWebServer/Core (3.4)
   - MBProgressHUD (1.0.0)
-  - R.swift (3.3.0):
-    - R.swift.Library (~> 3.0.2)
-  - R.swift.Library (3.0.2)
-  - RxCocoa (3.6.1):
-    - RxSwift (~> 3.6)
-  - RxSwift (3.6.1)
-  - SnapKit (3.2.0)
+  - R.swift (4.0.0):
+    - R.swift.Library (~> 4.0.0)
+  - R.swift.Library (4.0.0)
+  - RxCocoa (4.0.0):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.0.0)
+  - SnapKit (4.0.0)
   - SwiftyJSON (3.1.4)
-  - Zip (0.7.0)
 
 DEPENDENCIES:
-  - GCDWebServer
   - MBProgressHUD (~> 1.0.0)
   - R.swift
   - RxCocoa
   - RxSwift
   - SnapKit
   - SwiftyJSON
-  - Zip
 
 SPEC CHECKSUMS:
-  GCDWebServer: 20d53c3181b3c78d865e93e326faf506306f5338
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
-  R.swift: bde9704d50ff36820f49e266bc88ef545e1e9b36
-  R.swift.Library: fbdec16c9802ad104fc1ba53415dc190e6ec5c73
-  RxCocoa: 84a08739ab186248c7f31ce4ee92d6f8a947d690
-  RxSwift: f9de85ea20cd2f7716ee5409fc13523dc638e4e4
-  SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
+  R.swift: d6a5ec2f55a8441dc0ed9f1f8b37d7d11ae85c66
+  R.swift.Library: c3af34921024333546e23b70e70d0b4e0cffca75
+  RxCocoa: d62846ca96495d862fa4c59ea7d87e5031d7340e
+  RxSwift: fd680d75283beb5e2559486f3c0ff852f0d35334
+  SnapKit: a42d492c16e80209130a3379f73596c3454b7694
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
-  Zip: e34513299ac38c0686d5b24504da7ce343799ab9
 
-PODFILE CHECKSUM: dd3ac2372c8ed04e35f99122aa7e98ea026b2231
+PODFILE CHECKSUM: f9843cf97863b0c09b694bbc0fe6637f13525c66
 
 COCOAPODS: 1.3.1

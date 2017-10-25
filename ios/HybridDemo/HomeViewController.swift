@@ -14,23 +14,20 @@ import Rswift
 class HomeViewController: UIViewController {
     
     
-    @IBOutlet weak var vueLocalFileButton: UIButton!
+    @IBOutlet weak var vueRemoteButton: UIButton!
     @IBOutlet weak var vueLocalhostButton: UIButton!
-    @IBOutlet weak var reactLocalFileButton: UIButton!
+    @IBOutlet weak var reactRemoteButton: UIButton!
     @IBOutlet weak var reactLocalhostButton: UIButton!
     
     let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let vueWebServerUrl = "http://localhost:\(vueWebServer.port)/#/"
-        let reactWebServerUrl = "http://localhost:\(reactWebServer.port)/"
 
         Observable.merge([
-            vueLocalFileButton.rx.tap.asObservable().map { URL(string: vueWebServerUrl)! },
+            vueRemoteButton.rx.tap.asObservable().map { URL(string: "https://canlis.github.io/canlis-vue-example/#/")! },
             vueLocalhostButton.rx.tap.asObservable().map { URL(string: "http://localhost:8080/#/")! },
-            reactLocalFileButton.rx.tap.asObservable().map { URL(string: reactWebServerUrl)! },
+            reactRemoteButton.rx.tap.asObservable().map { URL(string: "https://canlis.github.io/canlis-react-example/")! },
             reactLocalhostButton.rx.tap.asObservable().map { URL(string: "http://localhost:3000/")! },
             ])
             .subscribe(onNext: { [unowned self] url in

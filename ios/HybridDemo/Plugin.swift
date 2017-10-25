@@ -52,11 +52,12 @@ extension CallBackHybridPlugin {
                         return (callbackId: callbackId, response: response, webView: webView)
                 }
             }
+            .observeOn(MainScheduler.instance)
             .subscribe(onNext: { (callbackId, response, webView) in
                 webView.evaluateJavaScript("window.$native.callbacks['\(callbackId)'].callback(\(response.rawString() ?? "{}"));", completionHandler: nil)
             })
     }
-    
+
 }
 
 
