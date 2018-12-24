@@ -16,55 +16,11 @@ struct R: Rswift.Validatable {
     try intern.validate()
   }
   
-  /// This `R.color` struct is generated, and contains static references to 0 colors.
-  struct color {
-    fileprivate init() {}
-  }
-  
-  /// This `R.file` struct is generated, and contains static references to 2 files.
-  struct file {
-    /// Resource file `react.zip`.
-    static let reactZip = Rswift.FileResource(bundle: R.hostingBundle, name: "react", pathExtension: "zip")
-    /// Resource file `vue.zip`.
-    static let vueZip = Rswift.FileResource(bundle: R.hostingBundle, name: "vue", pathExtension: "zip")
-    
-    /// `bundle.url(forResource: "react", withExtension: "zip")`
-    static func reactZip(_: Void = ()) -> Foundation.URL? {
-      let fileResource = R.file.reactZip
-      return fileResource.bundle.url(forResource: fileResource)
-    }
-    
-    /// `bundle.url(forResource: "vue", withExtension: "zip")`
-    static func vueZip(_: Void = ()) -> Foundation.URL? {
-      let fileResource = R.file.vueZip
-      return fileResource.bundle.url(forResource: fileResource)
-    }
-    
-    fileprivate init() {}
-  }
-  
-  /// This `R.font` struct is generated, and contains static references to 0 fonts.
-  struct font {
-    fileprivate init() {}
-  }
-  
-  /// This `R.image` struct is generated, and contains static references to 0 images.
-  struct image {
-    fileprivate init() {}
-  }
-  
-  /// This `R.nib` struct is generated, and contains static references to 0 nibs.
-  struct nib {
-    fileprivate init() {}
-  }
-  
-  /// This `R.reuseIdentifier` struct is generated, and contains static references to 0 reuse identifiers.
+  /// This `R.reuseIdentifier` struct is generated, and contains static references to 1 reuse identifiers.
   struct reuseIdentifier {
-    fileprivate init() {}
-  }
-  
-  /// This `R.segue` struct is generated, and contains static references to 0 view controllers.
-  struct segue {
+    /// Reuse identifier `TitleCell`.
+    static let titleCell: Rswift.ReuseIdentifier<UIKit.UITableViewCell> = Rswift.ReuseIdentifier(identifier: "TitleCell")
+    
     fileprivate init() {}
   }
   
@@ -88,11 +44,6 @@ struct R: Rswift.Validatable {
     fileprivate init() {}
   }
   
-  /// This `R.string` struct is generated, and contains static references to 0 localization tables.
-  struct string {
-    fileprivate init() {}
-  }
-  
   fileprivate struct intern: Rswift.Validatable {
     fileprivate static func validate() throws {
       try _R.validate()
@@ -111,20 +62,22 @@ struct _R: Rswift.Validatable {
     try storyboard.validate()
   }
   
-  struct nib {
-    fileprivate init() {}
-  }
-  
   struct storyboard: Rswift.Validatable {
     static func validate() throws {
+      try launchScreen.validate()
       try main.validate()
     }
     
-    struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType {
+    struct launchScreen: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
       typealias InitialController = UIKit.UIViewController
       
       let bundle = R.hostingBundle
       let name = "LaunchScreen"
+      
+      static func validate() throws {
+        if #available(iOS 11.0, *) {
+        }
+      }
       
       fileprivate init() {}
     }
@@ -132,15 +85,23 @@ struct _R: Rswift.Validatable {
     struct main: Rswift.StoryboardResourceWithInitialControllerType, Rswift.Validatable {
       typealias InitialController = UIKit.UINavigationController
       
+      let articlesViewController = StoryboardViewControllerResource<ArticlesViewController>(identifier: "ArticlesViewController")
       let bundle = R.hostingBundle
       let hybridViewController = StoryboardViewControllerResource<HybridViewController>(identifier: "HybridViewController")
       let name = "Main"
+      
+      func articlesViewController(_: Void = ()) -> ArticlesViewController? {
+        return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: articlesViewController)
+      }
       
       func hybridViewController(_: Void = ()) -> HybridViewController? {
         return UIKit.UIStoryboard(resource: self).instantiateViewController(withResource: hybridViewController)
       }
       
       static func validate() throws {
+        if #available(iOS 11.0, *) {
+        }
+        if _R.storyboard.main().articlesViewController() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'articlesViewController' could not be loaded from storyboard 'Main' as 'ArticlesViewController'.") }
         if _R.storyboard.main().hybridViewController() == nil { throw Rswift.ValidationError(description:"[R.swift] ViewController with identifier 'hybridViewController' could not be loaded from storyboard 'Main' as 'HybridViewController'.") }
       }
       

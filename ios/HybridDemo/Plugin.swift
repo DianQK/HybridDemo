@@ -68,15 +68,15 @@ struct SelectImagePlugin: CallBackHybridPlugin {
     }
     
     static func didReceive(message: JSON, webView: WKWebView) -> Observable<JSON> {
-        return Observable<UIImagePickerControllerSourceType>
+        return Observable<UIImagePickerController.SourceType>
             .create { (observer) -> Disposable in
                 let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 alert.addAction(UIAlertAction(title: "拍照", style: .default, handler: { _ in
-                    observer.onNext(UIImagePickerControllerSourceType.camera)
+                    observer.onNext(UIImagePickerController.SourceType.camera)
                     observer.onCompleted()
                 }))
                 alert.addAction(UIAlertAction(title: "从相册选择", style: .default, handler: { _ in
-                    observer.onNext(UIImagePickerControllerSourceType.photoLibrary)
+                    observer.onNext(UIImagePickerController.SourceType.photoLibrary)
                     observer.onCompleted()
                 }))
                 alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: nil))
@@ -93,8 +93,8 @@ struct SelectImagePlugin: CallBackHybridPlugin {
             }
             .flatMap { $0.rx.didFinishPickingMediaWithInfo }
             .take(1)
-            .map { return $0[UIImagePickerControllerEditedImage] as! UIImage }
-            .map { UIImagePNGRepresentation($0)!.base64EncodedString() }
+            .map { return $0[UIImagePickerController.InfoKey.editedImage.rawValue] as! UIImage }
+            .map { $0.pngData()!.base64EncodedString() }
             .map { return JSON(["image": "data:img/jpg;base64," + $0]) }
     }
     
@@ -123,7 +123,7 @@ struct RightBarTitlePlugin: HybridPlugin {
                         webView.parentViewController?.navigationItem.rightBarButtonItem = bar
                     }
                 } else {
-                    bar = UIBarButtonItem(title: title, style: UIBarButtonItemStyle.plain, target: nil, action: nil)
+                    bar = UIBarButtonItem(title: title, style: UIBarButtonItem.Style.plain, target: nil, action: nil)
                     webView.parentViewController?.navigationItem.rightBarButtonItem = bar
                 }
                 return bar.rx.tap.map { webView }
@@ -176,7 +176,7 @@ struct DisplayImagePlugin: CallBackHybridPlugin {
         
         let imageView = UIImageView()
         let disposeBag = DisposeBag()
-        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.light))
+        let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.light))
         
         var originFrame = CGRect.zero
         

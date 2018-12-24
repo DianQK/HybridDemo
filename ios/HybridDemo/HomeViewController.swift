@@ -18,6 +18,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var vueLocalhostButton: UIButton!
     @IBOutlet weak var reactRemoteButton: UIButton!
     @IBOutlet weak var reactLocalhostButton: UIButton!
+    @IBOutlet weak var articlesButton: UIButton!
     
     let disposeBag = DisposeBag()
     
@@ -35,6 +36,12 @@ class HomeViewController: UIViewController {
                 _ = hybridViewController.view
                 hybridViewController.webView.load(URLRequest(url: url))
                 self.navigationController?.pushViewController(hybridViewController, animated: true)
+            })
+            .disposed(by: disposeBag)
+
+        articlesButton.rx.tap
+            .subscribe(onNext: { [unowned self] in
+                self.navigationController?.pushViewController(R.storyboard.main.articlesViewController()!, animated: true)
             })
             .disposed(by: disposeBag)
     }

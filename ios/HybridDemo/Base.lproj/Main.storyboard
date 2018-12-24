@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="b7E-3i-oyo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="b7E-3i-oyo">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -38,27 +38,32 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="BqT-8t-U9l">
-                                <rect key="frame" x="104" y="199" width="167" height="205"/>
+                                <rect key="frame" x="102.5" y="171.5" width="170" height="260"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="26g-OT-XJp">
-                                        <rect key="frame" x="0.0" y="0.0" width="167" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="170" height="40"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <state key="normal" title="Vue remote file"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fIi-Ri-med">
-                                        <rect key="frame" x="0.0" y="55" width="167" height="40"/>
+                                        <rect key="frame" x="0.0" y="55" width="170" height="40"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <state key="normal" title="Vue localhost"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xHm-te-I8u">
-                                        <rect key="frame" x="0.0" y="110" width="167" height="40"/>
+                                        <rect key="frame" x="0.0" y="110" width="170" height="40"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <state key="normal" title="React remote file"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1tz-eM-sI0">
-                                        <rect key="frame" x="0.0" y="165" width="167" height="40"/>
+                                        <rect key="frame" x="0.0" y="165" width="170" height="40"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                         <state key="normal" title="React localhost"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hif-Jk-o44">
+                                        <rect key="frame" x="0.0" y="220" width="170" height="40"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                        <state key="normal" title="Wechat's articles"/>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -71,6 +76,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Home" id="QsB-f4-mwW"/>
                     <connections>
+                        <outlet property="articlesButton" destination="Hif-Jk-o44" id="EOu-d1-Isj"/>
                         <outlet property="reactLocalhostButton" destination="1tz-eM-sI0" id="SIL-zd-Tz8"/>
                         <outlet property="reactRemoteButton" destination="xHm-te-I8u" id="gTy-0g-yYp"/>
                         <outlet property="vueLocalhostButton" destination="fIi-Ri-med" id="Zdq-Mj-WY5"/>
@@ -99,6 +105,58 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="404" y="47"/>
+        </scene>
+        <!--Articles View Controller-->
+        <scene sceneID="KSl-zR-rGS">
+            <objects>
+                <viewController storyboardIdentifier="ArticlesViewController" id="Mlo-e7-CSg" customClass="ArticlesViewController" customModule="HybridDemo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7vs-xU-tbM"/>
+                        <viewControllerLayoutGuide type="bottom" id="TCd-H1-Uiv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="A2C-8r-zCx">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="eDG-0u-C6Z">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TitleCell" textLabel="7Ff-Dv-mlt" style="IBUITableViewCellStyleDefault" id="Rnl-Vm-OGQ">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Rnl-Vm-OGQ" id="2aT-J5-Bbx">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7Ff-Dv-mlt">
+                                                    <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="eDG-0u-C6Z" secondAttribute="bottom" id="4QC-N8-6qI"/>
+                            <constraint firstAttribute="trailing" secondItem="eDG-0u-C6Z" secondAttribute="trailing" id="AYI-uB-oXC"/>
+                            <constraint firstItem="eDG-0u-C6Z" firstAttribute="leading" secondItem="A2C-8r-zCx" secondAttribute="leading" id="dvD-zi-R4e"/>
+                            <constraint firstItem="eDG-0u-C6Z" firstAttribute="top" secondItem="7vs-xU-tbM" secondAttribute="bottom" id="v2n-5w-BbO"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="eDG-0u-C6Z" id="LVx-dz-cta"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sj5-HS-A60" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1241" y="46"/>
         </scene>
     </scenes>
 </document>

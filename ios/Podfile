@@ -1,4 +1,4 @@
-platform :ios, '9.0'
+platform :ios, '11.0'
 
 use_frameworks!
 inhibit_all_warnings!
@@ -10,14 +10,14 @@ target 'HybridDemo' do
   pod 'SnapKit'
   pod 'SwiftyJSON'
   pod 'R.swift'
-  pod 'MBProgressHUD', '~> 1.0.0'
+  pod 'MBProgressHUD'
 
 end
 
 post_install do |installer|
     installer.pods_project.targets.each do |target|
         target.build_configurations.each do |config|
-            config.build_settings['SWIFT_VERSION'] = '4.0'
+            config.build_settings['SWIFT_VERSION'] = '4.2'
         end
     end
 end

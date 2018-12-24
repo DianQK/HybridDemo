@@ -152,7 +152,7 @@ class HybridViewController: UIViewController {
         
         if let edgePanGestureRecognizer = self.navigationController?.interactivePopGestureRecognizer as? UIScreenEdgePanGestureRecognizer {
             edgePanGestureRecognizer.rx.event
-                .filter { $0.state == UIGestureRecognizerState.ended }
+                .filter { $0.state == UIGestureRecognizer.State.ended }
                 .map { [unowned self] (edgePanGestureRecognizer) -> Bool in
                     guard let view = edgePanGestureRecognizer.view else {
                         fatalError()
@@ -164,7 +164,7 @@ class HybridViewController: UIViewController {
                     print(pop) // pop 执行了两次
                     if pop {
                         let imageSnapshot = self?.webView.imageSnapshot
-                        Hybrid.shared.webView.evaluateJavaScript("window.history.back();", completionHandler: { _ in
+                        Hybrid.shared.webView.evaluateJavaScript("window.history.back();", completionHandler: { (_, _) in
                             if let navigationController = navigationController {
                                 self?.snapshotImageView.isHidden = false
                                 self?.snapshotImageView.image = imageSnapshot
